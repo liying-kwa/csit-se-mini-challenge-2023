@@ -44,8 +44,8 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
                     '$match': {
                         city: { '$regex': new RegExp('^' + destinationCity, "i") },
                         date: {
-                            '$gte': new Date('2023-12-10'),
-                            '$lte': new Date('2023-12-16')
+                            '$gte': new Date(checkInDate as string),
+                            '$lte': new Date(checkOutDate as string)
                         }
                     }
                 },
