@@ -43,9 +43,7 @@ flightRouter.get("/", async (req: Request, res: Response) => {
                 {
                     srccity: "Singapore",
                     destcity: { '$regex': new RegExp('^' + destinationCity, "i") },
-                    date: {
-                        '$eq': new Date(departureDate as string),
-                    }
+                    date: new Date(departureDate as string)
                 }
             )
             .sort({ price: 1 })
@@ -63,9 +61,7 @@ flightRouter.get("/", async (req: Request, res: Response) => {
                 {
                     srccity: { '$regex': new RegExp('^' + destinationCity, "i") },
                     destcity: 'Singapore',
-                    date: {
-                        '$eq': new Date(returnDate as string),
-                    }
+                    date: new Date(returnDate as string)
                 }
             )
             .sort({ price: 1 })
