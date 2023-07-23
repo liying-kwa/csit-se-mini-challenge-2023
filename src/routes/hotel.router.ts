@@ -38,11 +38,11 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
 
     try {
         // 1. Find the cheapest hotel to stay from <check in date> to <check out date> in <destination city>.
-        const cheaptestHotelPrices = (await collections.hotels!
+        const cheapestHotelPrices = (await collections.hotels!
             .aggregate([
                 {
                     '$match': {
-                        city: destinationCity,
+                        city: { '$regex': new RegExp('^' + destinationCity, "i") },
                         date: {
                             '$gte': new Date('2023-12-10'),
                             '$lte': new Date('2023-12-16')
@@ -52,7 +52,8 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
                 {
                     '$group': {
                         _id: "$hotelName",
-                        price: { '$sum': "$price" }
+                        price: { '$sum': "$price" },
+                        city: { '$first': "$city" }
                     }
                 }
             ])
@@ -61,9 +62,9 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
             .toArray());
 
         // 2. Combine this information and return the required details
-        const cheapestHotelPrice = cheaptestHotelPrices[0]
+        const cheapestHotelPrice = cheapestHotelPrices[0]
         const cheapestHotels = [{
-            "City": destinationCity,
+            "City": cheapestHotelPrice.city,
             "Check In Date": checkInDate,
             "Check Out Date": checkOutDate,
             "Hotel": cheapestHotelPrice._id,
