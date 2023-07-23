@@ -1,0 +1,9 @@
+node_modules/
+# Dependency directories
+node_modules/
+
+# dotenv environment variable files
+.env
+
+# Express.js build / generate output
+dist/
