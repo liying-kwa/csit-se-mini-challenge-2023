@@ -37,7 +37,7 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
     }
 
     try {
-        // 1. Find the cheapest hotel to stay from <check in date> to <check out date> in <destination city>.
+        // 1. Find the cheapest hotel to stay from <check in date> to <check out date> in <destination city>. If nothing (dest not found), return empty.
         const cheapestHotelPrices = (await collections.hotels!
             .aggregate([
                 {
@@ -60,6 +60,11 @@ hotelRouter.get("/", async (req: Request, res: Response) => {
             .sort({ price: 1 })
             .limit(1)   // assume no same-priced tickets for simplicity
             .toArray());
+
+        if (cheapestHotelPrices.length == 0) {
+            res.status(200).send([]);
+            return;
+        }
 
         // 2. Combine this information and return the required details
         const cheapestHotelPrice = cheapestHotelPrices[0]
